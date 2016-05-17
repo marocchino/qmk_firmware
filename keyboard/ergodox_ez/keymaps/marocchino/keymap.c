@@ -5,6 +5,10 @@
 #define BASE 0 // default layer
 #define WINS 1 // wins
 #define MDIA 2 // media keys
+// macros
+#define CP  M(0)
+#define PRN M(1)
+#define BRC M(2)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -12,7 +16,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * | ESC    |   1  |   2  |   3  |   4  |   5  |  '"  |           |  `~  |   6  |   7  |   8  |   9  |   0  | \      |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Tab    |   Q  |   W  |   E  |   R  |   T  |   (  |           |   )  |   Y  |   U  |   I  |   O  |   P  | BkSp   |
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  ()  |           |  {}  |   Y  |   U  |   I  |   O  |   P  | BkSp   |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | LCtrl  |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / FN| Enter  |
  * |--------+------+------+------+------+------|   -  |           |   =  |------+------+------+------+------+--------|
@@ -33,18 +37,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
         KC_ESC,  KC_1,    KC_2,          KC_3,    KC_4,    KC_5,   KC_QUOT,
-        KC_TAB,  KC_Q,    KC_W,          KC_E,    KC_R,    KC_T,   KC_LPRN,
+        KC_TAB,  KC_Q,    KC_W,          KC_E,    KC_R,    KC_T,   PRN,
         KC_LCTL, KC_A,    KC_S,          KC_D,    KC_F,    KC_G,
         KC_LSFT, KC_Z,    KC_X,          KC_C,    KC_V,    KC_B,   KC_MINS,
-        KC_TRNS, KC_LALT, LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
+        CP,      KC_LALT, LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
                                                      LALT(KC_SPC), TG(WINS),
                                                                    KC_TRNS,
                                                  KC_LGUI,  KC_SPC, KC_TRNS,
         // right hand
         KC_GRV,      KC_6,    KC_7,   KC_8,   KC_9,   KC_0,             KC_BSLS,
-        KC_RPRN,     KC_Y,    KC_U,   KC_I,   KC_O,   KC_P,             KC_BSPC,
+        BRC,         KC_Y,    KC_U,   KC_I,   KC_O,   KC_P,             KC_BSPC,
                      KC_H,    KC_J,   KC_K,   KC_L,   LT(MDIA, KC_SCLN),KC_ENT,
-        KC_EQL,      KC_N,    KC_M,   KC_COMM,KC_DOT, KC_SLSH,          KC_RSFT,
+        KC_EQL,      KC_N,    KC_M,   KC_COMM,KC_DOT, KC_SLSH,          KC_LSFT,
                               KC_LEFT,KC_DOWN,KC_UP,  KC_RGHT,          KC_TRNS,
         KC_TRNS,     KC_TRNS,
         RCTL(KC_SPC),
@@ -142,16 +146,53 @@ const uint16_t PROGMEM fn_actions[] = {
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
-  // MACRODOWN only works in this function
-      switch(id) {
-        case 0:
+    static uint16_t key_timer;
+    // MACRODOWN only works in this function
+    switch(id) {
+      case 0:
         if (record->event.pressed) {
-          register_code(KC_RSFT);
-        } else {
-          unregister_code(KC_RSFT);
+          key_timer = timer_read(); // if the key is being pressed, we start the timer.
+        } else { // this means the key was just released, so we can figure out how long it was pressed for (tap or "held down").
+          if (timer_elapsed(key_timer) > 150) { // 150 being 150ms, the threshhold we pick for counting something as a tap.
+            return MACRO( D(LGUI), T(C), U(LGUI), END  );
+          } else {
+            return MACRO( D(LGUI), T(V), U(LGUI), END  );
+          }
         }
         break;
-      }
+      case 1:
+        if (record->event.pressed) {
+          key_timer = timer_read();
+          register_code(KC_LSFT);
+        } else if (timer_elapsed(key_timer) < 150) {
+          register_code(KC_9);
+          unregister_code(KC_9);
+          register_code(KC_0);
+          unregister_code(KC_0);
+          unregister_code(KC_LSFT);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+        } else {
+          unregister_code(KC_LSFT);
+        }
+        break;
+      case 2:
+        if (record->event.pressed) {
+          key_timer = timer_read();
+          register_code(KC_LSFT);
+        } else if (timer_elapsed(key_timer) < 150) {
+          register_code(KC_LBRC);
+          unregister_code(KC_LBRC);
+          register_code(KC_RBRC);
+          unregister_code(KC_RBRC);
+          unregister_code(KC_LSFT);
+          register_code(KC_LEFT);
+          unregister_code(KC_LEFT);
+        } else {
+          unregister_code(KC_LSFT);
+        }
+        break;
+    }
     return MACRO_NONE;
 };
 
