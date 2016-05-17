@@ -6,9 +6,10 @@
 #define WINS 1 // wins
 #define MDIA 2 // media keys
 // macros
-#define CP  M(0)
-#define PRN M(1)
-#define BRC M(2)
+#define CPM M(0)
+#define CPW M(1)
+#define PRN M(2)
+#define BRC M(3)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Basic layer
@@ -40,7 +41,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TAB,  KC_Q,    KC_W,          KC_E,    KC_R,    KC_T,   PRN,
         KC_LCTL, KC_A,    KC_S,          KC_D,    KC_F,    KC_G,
         KC_LSFT, KC_Z,    KC_X,          KC_C,    KC_V,    KC_B,   KC_MINS,
-        CP,      KC_LALT, LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
+        CPM,     KC_LALT, LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
                                                      LALT(KC_SPC), KC_TRNS,
                                                                    KC_TRNS,
                                                  KC_LGUI,  KC_SPC, KC_TRNS,
@@ -83,7 +84,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
         KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        CPW,     KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
                                                      KC_RALT, KC_TRNS,
                                                               KC_LGUI,
                                             KC_LCTL, KC_TRNS, KC_LALT,
@@ -162,6 +163,17 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
         break;
       case 1:
         if (record->event.pressed) {
+          key_timer = timer_read(); // if the key is being pressed, we start the timer.
+        } else { // this means the key was just released, so we can figure out how long it was pressed for (tap or "held down").
+          if (timer_elapsed(key_timer) > 150) { // 150 being 150ms, the threshhold we pick for counting something as a tap.
+            return MACRO( D(LCTL), T(C), U(LCTL), END  );
+          } else {
+            return MACRO( D(LCTL), T(V), U(LCTL), END  );
+          }
+        }
+        break;
+      case 2:
+        if (record->event.pressed) {
           key_timer = timer_read();
           register_code(KC_LSFT);
         } else if (timer_elapsed(key_timer) < 150) {
@@ -176,7 +188,7 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
           unregister_code(KC_LSFT);
         }
         break;
-      case 2:
+      case 3:
         if (record->event.pressed) {
           key_timer = timer_read();
           register_code(KC_LSFT);
