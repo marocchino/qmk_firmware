@@ -1,10 +1,11 @@
-#include "ergodox_ez.h"
+#include "ergodox.h"
 #include "debug.h"
 #include "action_layer.h"
 
 #define BASE 0 // default layer
 #define WINS 1 // wins
 #define MDIA 2 // media keys
+#define SYMB 3 // symbol keys
 // macros
 #define CPM M(0)
 #define CPW M(1)
@@ -21,12 +22,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * | LCtrl  |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |; / FN| Enter  |
  * |--------+------+------+------+------+------|   -  |           |   =  |------+------+------+------+------+--------|
- * | LShift |   Z  |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |  /   | RShift |
+ * | LShift | Z/FN |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  |  /   | RShift |
  * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   |      | LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right|      |
+ *   | C&P  | LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right|      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | Lang |      |       |      | L1   |
+ *                                        | Lang | ESC  |       |      | L1   |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |      |       | Dash |      |      |
  *                                 | LGui |Space |------|       |------|Space | RGui |
@@ -37,12 +38,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Otherwise, it needs KC_*
 [BASE] = KEYMAP(  // layer 0 : default
         // left hand
-        KC_ESC,  KC_1,    KC_2,          KC_3,    KC_4,    KC_5,   KC_QUOT,
-        KC_TAB,  KC_Q,    KC_W,          KC_E,    KC_R,    KC_T,   PRN,
-        KC_LCTL, KC_A,    KC_S,          KC_D,    KC_F,    KC_G,
-        KC_LSFT, KC_Z,    KC_X,          KC_C,    KC_V,    KC_B,   KC_MINS,
-        CPM,     KC_LALT, LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
-                                                     LALT(KC_SPC), KC_TRNS,
+        KC_ESC,  KC_1,          KC_2,          KC_3,    KC_4,    KC_5,   KC_QUOT,
+        KC_TAB,  KC_Q,          KC_W,          KC_E,    KC_R,    KC_T,   PRN,
+        KC_LCTL, KC_A,          KC_S,          KC_D,    KC_F,    KC_G,
+        KC_LSFT, LT(SYMB, KC_Z),KC_X,          KC_C,    KC_V,    KC_B,   KC_MINS,
+        CPM,     KC_LALT,       LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
+                                                     LALT(KC_SPC), KC_ESC,
                                                                    KC_TRNS,
                                                  KC_LGUI,  KC_SPC, KC_TRNS,
         // right hand
@@ -120,7 +121,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 `--------------------'       `--------------------'
  */
 // MEDIA AND MOUSE
-KEYMAP(
+[MDIA] = KEYMAP(  // layer 2 : media
        KC_TRNS, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,
        KC_TRNS, KC_TRNS, KC_MS_U, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
        KC_TRNS, KC_MS_L, KC_MS_D, KC_MS_R, KC_TRNS, KC_TRNS,
@@ -139,10 +140,55 @@ KEYMAP(
        KC_TRNS,
        KC_TRNS, KC_TRNS, KC_WBAK
 ),
+/* Keymap 3: Symbol
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * |        |      |      |      |      |      |      |           |      |      |      |  -   |  =   |  \   |   `    |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |      |      |      |  [   |  ]   |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |------|           |------|      |      |      |  ;   |  '   |        |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   |      |      |      |      |      |                                       |      |      |      |      |      |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        |      |      |       |      |      |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |      |       |      |      |      |
+ *                                 |      |      |------|       |------|      |      |
+ *                                 |      |      |      |       |      |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+// If it accepts an argument (i.e, is a function), it doesn't need KC_.
+// Otherwise, it needs KC_*
+[SYMB] = KEYMAP(  // layer 3 : symbol
+        // left hand
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                                                     KC_TRNS, KC_TRNS,
+                                                              KC_TRNS,
+                                            KC_TRNS, KC_TRNS, KC_TRNS,
+        // right hand
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_MINS, KC_EQL,  KC_BSLS, KC_GRV,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LBRC, KC_RBRC, KC_TRNS,
+                 KC_TRNS, KC_TRNS, KC_TRNS, KC_SCLN, KC_QUOT, KC_TRNS,
+        KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+                          KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+        KC_TRNS, KC_TRNS,
+        KC_TRNS,
+        KC_TRNS, KC_TRNS,  KC_TRNS
+    ),
 };
 
 const uint16_t PROGMEM fn_actions[] = {
-    [1] = ACTION_LAYER_TAP_TOGGLE(MDIA)                // FN1 - Momentary Layer 1 (Media)
+    [1] = ACTION_LAYER_TAP_TOGGLE(MDIA),                // FN1 - Momentary Layer 1 (Media)
+    [2] = ACTION_LAYER_TAP_TOGGLE(WINS),                // FN2 - Momentary Layer 2 (Windows)
+    [3] = ACTION_LAYER_TAP_TOGGLE(SYMB),                // FN3 - Momentary Layer 3 (Symbol)
 };
 
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
