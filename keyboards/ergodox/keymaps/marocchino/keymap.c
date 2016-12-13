@@ -71,11 +71,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | C&P  | LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right|      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | ESC  |  En  |       |      | L1   |
+ *                                        | ESC  |  Ja  |       |      | L1   |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |  Ko  |       | Dash |      |      |
  *                                 | LGui |Space |------|       |------|Space | RGui |
- *                                 |      |      |  Ja  |       | Spot |      |      |
+ *                                 |      |      |  En  |       | Spot |      |      |
  *                                 `--------------------'       `--------------------'
  */
 // If it accepts an argument (i.e, is a function), it doesn't need KC_.
@@ -87,9 +87,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LCTL, LT(SYMB, KC_A),KC_S,          KC_D,    KC_F,    KC_G,
         KC_LSFT, LT(SYMB, KC_Z),KC_X,          KC_C,    KC_V,    KC_B,   KC_MINS,
         CPM,     KC_LALT,       LSFT(KC_LGUI), KC_LBRC, KC_RBRC,
-                                                           KC_ESC, HYPR(KC_1),
-                                                                   HYPR(KC_2),
-                                                 KC_LGUI,  KC_SPC, HYPR(KC_3),
+                                                           KC_ESC, HYPR(KC_0),
+                                                                   HYPR(KC_9),
+                                                 KC_LGUI,  KC_SPC, HYPR(KC_8),
         // right hand
         KC_7,        KC_8,    KC_9,   KC_0,   KC_MINS,KC_EQL,           KC_BSPC,
         BRC,         KC_Y,    KC_U,   KC_I,   KC_O,   KC_P,             KC_BSLS,
