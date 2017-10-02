@@ -13,13 +13,12 @@ enum custom_keycodes {
   PLACEHOLDER = SAFE_RANGE, // can always be here
   EPRM,
   VRSN,
-  RGB_SLD
+  RGB_SLD,
+  CPM,
+  CPW,
+  PRN,
+  BRC
 };
-// macros
-#define CPM M(0)
-#define CPW M(1)
-#define PRN M(2)
-#define BRC M(3)
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 /* Keymap 0: Windows
@@ -65,6 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_RGUI,
         KC_RALT, KC_SPC,   KC_RCTL
     ),
+
 /* Keymap 1: Basic layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
@@ -200,70 +200,8 @@ const uint16_t PROGMEM fn_actions[] = {
     [3] = ACTION_LAYER_TAP_TOGGLE(SYMB),                // FN3 - Momentary Layer 3 (Symbol)
 };
 
-const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
-{
-    static uint16_t key_timer;
-    // MACRODOWN only works in this function
-    switch(id) {
-      case 0:
-        if (record->event.pressed) {
-          key_timer = timer_read(); // if the key is being pressed, we start the timer.
-        } else { // this means the key was just released, so we can figure out how long it was pressed for (tap or "held down").
-          if (timer_elapsed(key_timer) > 150) { // 150 being 150ms, the threshhold we pick for counting something as a tap.
-            return MACRO( D(LGUI), T(C), U(LGUI), END  );
-          } else {
-            return MACRO( D(LGUI), T(V), U(LGUI), END  );
-          }
-        }
-        break;
-      case 1:
-        if (record->event.pressed) {
-          key_timer = timer_read(); // if the key is being pressed, we start the timer.
-        } else { // this means the key was just released, so we can figure out how long it was pressed for (tap or "held down").
-          if (timer_elapsed(key_timer) > 150) { // 150 being 150ms, the threshhold we pick for counting something as a tap.
-            return MACRO( D(LCTL), T(C), U(LCTL), END  );
-          } else {
-            return MACRO( D(LCTL), T(V), U(LCTL), END  );
-          }
-        }
-        break;
-      case 2:
-        if (record->event.pressed) {
-          key_timer = timer_read();
-          register_code(KC_LSFT);
-        } else if (timer_elapsed(key_timer) < 150) {
-          register_code(KC_9);
-          unregister_code(KC_9);
-          register_code(KC_0);
-          unregister_code(KC_0);
-          unregister_code(KC_LSFT);
-          register_code(KC_LEFT);
-          unregister_code(KC_LEFT);
-        } else {
-          unregister_code(KC_LSFT);
-        }
-        break;
-      case 3:
-        if (record->event.pressed) {
-          key_timer = timer_read();
-          register_code(KC_LSFT);
-        } else if (timer_elapsed(key_timer) < 150) {
-          register_code(KC_LBRC);
-          unregister_code(KC_LBRC);
-          register_code(KC_RBRC);
-          unregister_code(KC_RBRC);
-          unregister_code(KC_LSFT);
-          register_code(KC_LEFT);
-          unregister_code(KC_LEFT);
-        } else {
-          unregister_code(KC_LSFT);
-        }
-        break;
-    }
-    return MACRO_NONE;
-};
-
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  static uint16_t key_timer;
   switch (keycode) {
     // dynamically generate these.
     case EPRM:
@@ -283,6 +221,48 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         #ifdef RGBLIGHT_ENABLE
           rgblight_mode(1);
         #endif
+      }
+      return false;
+      break;
+    case CPM:
+      if (record->event.pressed) {
+        key_timer = timer_read();
+      } else if (timer_elapsed(key_timer) > 150) {
+        SEND_STRING(SS_LGUI("c"));
+      } else {
+        SEND_STRING(SS_LGUI("v"));
+      }
+      return false;
+      break;
+    case CPW:
+      if (record->event.pressed) {
+        key_timer = timer_read();
+      } else if (timer_elapsed(key_timer) > 150) {
+        SEND_STRING (SS_LCTL("c"));
+      } else {
+        SEND_STRING (SS_LCTL("v"));
+      }
+      return false;
+      break;
+    case PRN:
+      if (record->event.pressed) {
+        key_timer = timer_read();
+        SEND_STRING(SS_DOWN(X_LSHIFT));
+      } else if (timer_elapsed(key_timer) < 150) {
+        SEND_STRING (SS_UP(X_LSHIFT) "()" SS_TAP(X_LEFT));
+      } else {
+        SEND_STRING (SS_UP(X_LSHIFT));
+      }
+      return false;
+      break;
+    case BRC:
+      if (record->event.pressed) {
+        key_timer = timer_read();
+        SEND_STRING (SS_DOWN(X_RSHIFT));
+      } else if (timer_elapsed(key_timer) < 150) {
+        SEND_STRING (SS_UP(X_RSHIFT)"{}"SS_TAP(X_LEFT));
+      } else {
+        SEND_STRING (SS_UP(X_RSHIFT));
       }
       return false;
       break;
