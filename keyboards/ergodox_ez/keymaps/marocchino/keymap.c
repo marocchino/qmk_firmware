@@ -141,7 +141,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  */
 [WCTL] = KEYMAP(
         // left hand
-        _______,      _______,     _______,     _______,    _______,    _______,    _______,
+        _______,      LALT(KC_1),  LALT(KC_2),  LALT(KC_3), LALT(KC_4), LALT(KC_5), LALT(KC_6),
         LALT(KC_TAB), LALT(KC_F4), LCTL(KC_F4), _______,    KC_F5,      LCTL(KC_T), _______,
         _______,      LCTL(KC_A),  LCTL(KC_S),  _______,    KC_F3,      _______,
         _______,      LCTL(KC_Z),  LCTL(KC_X),  LCTL(KC_C), LCTL(KC_V), _______,    _______,
