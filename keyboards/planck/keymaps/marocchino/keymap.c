@@ -138,7 +138,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         key_timer = timer_read();
         SEND_STRING (SS_DOWN(X_LSHIFT));
-      } else if (timer_elapsed(key_timer) < 150) {
+      } else if (timer_elapsed(key_timer) < 100) {
         SEND_STRING (SS_UP(X_LSHIFT) "()" SS_TAP(X_LEFT));
       } else {
         SEND_STRING (SS_UP(X_LSHIFT));
@@ -149,7 +149,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
       if (record->event.pressed) {
         key_timer = timer_read();
         SEND_STRING (SS_DOWN(X_RSHIFT));
-      } else if (timer_elapsed(key_timer) < 150) {
+      } else if (timer_elapsed(key_timer) < 100) {
         SEND_STRING (SS_UP(X_RSHIFT) "{}" SS_TAP(X_LEFT));
       } else {
         SEND_STRING (SS_UP(X_RSHIFT));
