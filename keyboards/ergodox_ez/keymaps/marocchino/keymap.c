@@ -6,9 +6,10 @@
 
 #define BASE 0 // default layer
 #define WINS 1 // wins
-#define WCTL 2 // wins control
-#define MDIA 3 // media keys
-#define SYMB 4 // symbol keys
+#define WINQ 2 // wins
+#define WCTL 3 // wins control
+#define MDIA 4 // media keys
+#define SYMB 5 // symbol keys
 
 //define modifiers
 #define MODS_SHIFT_MASK  (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT))
@@ -76,27 +77,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         RCTL(KC_SPC),
         RGUI(KC_SPC), KC_BSPC, KC_RGUI
     ),
-/* Keymap 1: Basic Qwerty layer
- *
- * ,--------------------------------------------------.           ,--------------------------------------------------.
- * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   7  |   8  |   9  |   0  |   -  |   =  | BkSp   |
- * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * | Tab    |   Q  |   W  |   E  |   R  |   T  |  ()  |           |  {}  |   Y  |   U  |   I  |   O  |   P  | \|     |
- * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
- * | LCtrl  | A/FN |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  | ;/FN | Enter  |
- * |--------+------+------+------+------+------|   -  |           |   =  |------+------+------+------+------+--------|
- * | LShift | Z/FN |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  | //FN | RShift |
- * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
- *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
- *   `----------------------------------'                                       `----------------------------------'
- *                                        ,-------------.       ,-------------.
- *                                        | ESC  |  Ja  |       | Dict | Wins |
- *                                 ,------|------|------|       |------+------+------.
- *                                 |      |      |  Ko  |       | Dash |      |      |
- *                                 | LGui |Space |------|       |------| BkSp | RGui |
- *                                 |      |      |  En  |       | Spot |      |      |
- *                                 `--------------------'       `--------------------'
- */
 /* [BASE_QUERY] = LAYOUT_ergodox( */
 /*         // left hand */
 /*         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6, */
@@ -131,11 +111,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right|      |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | ESC  | RAlt |       | '"   | Base |
+ *                                        | ESC  | RAlt |       |Qwerty| Base |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      | LGui |       | RGui |      |      |
- *                                 | WCtl |Space |------|       |------| BkSp | WCtl |
- *                                 |      |      | LAlt |       | RAlt |      |      |
+ *                                 | LAlt |Space |------|       |------| BkSp | WCtl |
+ *                                 |      |      | Lang |       | RAlt |      |      |
  *                                 `--------------------'       `--------------------'
  */
 [WINS] = LAYOUT_ergodox(
@@ -147,24 +127,65 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_HYPR, KC_LALT, SFT_GUI, KC_LBRC, KC_RBRC,
                                                      KC_ESC,  KC_RALT,
                                                               KC_LGUI,
-                                           MO(WCTL), KC_SPC,  KC_LALT,
+                                            KC_LALT, KC_SPC,  LALT(KC_LSFT),
         // right hand
         KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
         BRC,     KC_J,    KC_U,    KC_R,    KC_L,    KC_SCLN, KC_BSLS,
                  KC_Y,    KC_N,    KC_I,    KC_O,    KC_H,    KC_ENT,
         KC_EQL,  KC_P,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                           KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPW,
-        KC_QUOT, DF(BASE),
+        DF(WINQ), DF(BASE),
         KC_RGUI,
-        KC_RALT, KC_BSPC, MO(WCTL)
+        KC_RALT,  KC_BSPC, MO(WCTL)
+    ),
+/* Keymap 2: Basic Qwerty layer
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   7  |   8  |   9  |   0  |   -  |   =  | BkSp   |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  ()  |           |  {}  |   Y  |   U  |   I  |   O  |   P  | \|     |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * | LCtrl  |   A  |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  | Enter  |
+ * |--------+------+------+------+------+------|   -  |           |   =  |------+------+------+------+------+--------|
+ * | LShift | Z/FN |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  | //FN | RShift |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        | ESC  | RAlt |       | '"   | Base |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      | LGui |       | RGui |      |      |
+ *                                 | LAlt |Space |------|       |------| BkSp | WCtl |
+ *                                 |      |      | Lang |       | RAlt |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+[WINQ] = LAYOUT_ergodox(
+        // left hand
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    PRN,
+        KC_LCTL, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,
+        KC_LSFT, SYMB_Z,  KC_X,    KC_C,    KC_V,    KC_B,    KC_MINS,
+        KC_HYPR, KC_LALT, SFT_GUI, KC_LBRC, KC_RBRC,
+                                                     KC_ESC,  KC_RALT,
+                                                              KC_LGUI,
+                                            KC_LALT, KC_SPC,  LALT(KC_LSFT),
+        // right hand
+        KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
+        BRC,     KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+                 KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
+        KC_EQL,  KC_N,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
+                          KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPW,
+        DF(WINS), DF(BASE),
+        KC_RGUI,
+        KC_RALT,  KC_BSPC, MO(WCTL)
     ),
 
-/* Keymap 2: Windows Control
+/* Keymap 3: Windows Control
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
- * |        | Exit | Close|      |Reload| NTab |      |           |      |      |      |      |      |      |        |
+ * |        |      | Close|      |Reload| NTab |      |           |      |      |      |      |      |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
  * |        | All  | Save | Find |      |      |------|           |------|      |      |      | Loc  |      |        |
  * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
@@ -183,7 +204,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 [WCTL] = LAYOUT_ergodox(
         // left hand
         _______,      LALT(KC_1),  LALT(KC_2),  LALT(KC_3), LALT(KC_4), LALT(KC_5), LALT(KC_6),
-        LALT(KC_TAB), LALT(KC_F4), LCTL(KC_F4), _______,    KC_F5,      LCTL(KC_T), _______,
+        LALT(KC_TAB), _______, LCTL(KC_F4), _______,    KC_F5,      LCTL(KC_T), _______,
         _______,      LCTL(KC_A),  LCTL(KC_S),  _______,    KC_F3,      _______,
         _______,      LCTL(KC_Z),  LCTL(KC_X),  LCTL(KC_C), LCTL(KC_V), _______,    _______,
         _______,      _______,     _______,     _______,    _______,
@@ -201,7 +222,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______,  _______
     ),
 
-/* Keymap 3: Media and mouse keys
+/* Keymap 4: Media and mouse keys
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |  F1  |  F2  |  F3  |  F4  |  F5  |  F6  |           |  F7  |  F8  |  F9  |  F10 |  F11 |  F12 |        |
@@ -241,7 +262,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
        _______,
        _______, KC_WBAK, _______
 ),
-/* Keymap 4: Symbol
+/* Keymap 5: Symbol
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * |        |      |      |      |      |      |      |           |      |      |      |      |      |      |        |
