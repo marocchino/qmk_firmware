@@ -155,7 +155,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                        | ESC  | RAlt |       | '"   | Base |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      | LGui |       | RGui |      |      |
- *                                 | LAlt |Space |------|       |------| BkSp | WCtl |
+ *                                 | LAlt |Space |------|       |------| BkSp | RGui |
  *                                 |      |      | Lang |       | RAlt |      |      |
  *                                 `--------------------'       `--------------------'
  */
@@ -177,7 +177,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                           KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPW,
         DF(WINS), DF(BASE),
         KC_RGUI,
-        KC_RALT,  KC_BSPC, MO(WCTL)
+        KC_RALT,  KC_BSPC, KC_RGUI
     ),
 
 /* Keymap 3: Windows Control
