@@ -5,11 +5,12 @@
 
 
 #define BASE 0 // default layer
-#define WINS 1 // wins
-#define WINQ 2 // wins
-#define WCTL 3 // wins control
-#define MDIA 4 // media keys
-#define SYMB 5 // symbol keys
+#define BASE_QUERY 1 // osx querty
+#define WINS 2 // wins
+#define WINQ 3 // wins
+#define WCTL 4 // wins control
+#define MDIA 5 // media keys
+#define SYMB 6 // symbol keys
 
 //define modifiers
 #define MODS_SHIFT_MASK  (MOD_BIT(KC_LSHIFT)|MOD_BIT(KC_RSHIFT))
@@ -50,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | ESC  |  Ja  |       | Dict | Wins |
+ *                                        | ESC  |  Ja  |       | Qwer | Wins |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |  Ko  |       | Dash |      |      |
  *                                 | LGui |Space |------|       |------| BkSp | RGui |
@@ -73,30 +74,51 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_Y,    KC_N,    KC_I,    KC_O,    KC_H,    KC_ENT,
         KC_EQL,       KC_P,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                                KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPM,
-        HYPR(KC_D),   DF(WINS),
+        DF(BASE_QUERY), DF(WINS),
+        RCTL(KC_SPC),
+        RGUI(KC_SPC),   KC_BSPC, KC_RGUI
+    ),
+/* Keymap 0: Basic layer
+ *
+ * ,--------------------------------------------------.           ,--------------------------------------------------.
+ * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   5  |   6  |   7  |   8  |   9  |   0  | BkSp   |
+ * |--------+------+------+------+------+-------------|           |------+------+------+------+------+------+--------|
+ * | Tab    |   Q  |   W  |   E  |   R  |   T  |  ()  |           |  {}  |   Y  |   U  |   I  |   O  |   P  | \|     |
+ * |--------+------+------+------+------+------|      |           |      |------+------+------+------+------+--------|
+ * | LCtrl  | A/FN |   S  |   D  |   F  |   G  |------|           |------|   H  |   J  |   K  |   L  |   ;  | Enter  |
+ * |--------+------+------+------+------+------|   -  |           |   =  |------+------+------+------+------+--------|
+ * | LShift | Z/FN |   X  |   C  |   V  |   B  |      |           |      |   N  |   M  |   ,  |   .  | //FN | RShift |
+ * `--------+------+------+------+------+-------------'           `-------------+------+------+------+------+--------'
+ *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
+ *   `----------------------------------'                                       `----------------------------------'
+ *                                        ,-------------.       ,-------------.
+ *                                        | ESC  |  Ja  |       | Qwer | Wins |
+ *                                 ,------|------|------|       |------+------+------.
+ *                                 |      |      |  Ko  |       | Dash |      |      |
+ *                                 | LGui |Space |------|       |------| BkSp | RGui |
+ *                                 |      |      |  En  |       | Spot |      |      |
+ *                                 `--------------------'       `--------------------'
+ */
+[BASE_QUERY] = LAYOUT_ergodox(
+        // left hand
+        KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,
+        KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   PRN,
+        KC_LCTL, SYMB_A,  KC_S,    KC_D,    KC_F,    KC_G,
+        KC_LSFT, SYMB_Z,  KC_X,    KC_C,    KC_V,    KC_B,   KC_MINS,
+        KC_HYPR, KC_LALT, SFT_GUI, KC_LBRC, KC_RBRC,
+                                                     KC_ESC, HYPR(KC_0),
+                                                             HYPR(KC_9),
+                                            KC_LGUI, KC_SPC, HYPR(KC_8),
+        // right hand
+        KC_7,         KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
+        BRC,          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
+                      KC_H,    KC_J,    KC_K,    KC_L,    MDIA_SC, KC_ENT,
+        KC_EQL,       KC_N,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
+                               KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPM,
+        DF(BASE),     DF(WINQ),
         RCTL(KC_SPC),
         RGUI(KC_SPC), KC_BSPC, KC_RGUI
     ),
-/* [BASE_QUERY] = LAYOUT_ergodox( */
-/*         // left hand */
-/*         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6, */
-/*         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   PRN, */
-/*         KC_LCTL, SYMB_A,  KC_S,    KC_D,    KC_F,    KC_G, */
-/*         KC_LSFT, SYMB_Z,  KC_X,    KC_C,    KC_V,    KC_B,   KC_MINS, */
-/*         KC_HYPR, KC_LALT, SFT_GUI, KC_LBRC, KC_RBRC, */
-/*                                                      KC_ESC, HYPR(KC_0), */
-/*                                                              HYPR(KC_9), */
-/*                                             KC_LGUI, KC_SPC, HYPR(KC_8), */
-/*         // right hand */
-/*         KC_7,         KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC, */
-/*         BRC,          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS, */
-/*                       KC_H,    KC_J,    KC_K,    KC_L,    MDIA_SC, KC_ENT, */
-/*         KC_EQL,       KC_N,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT, */
-/*                                KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPM, */
-/*         HYPR(KC_D),   DF(WINS), */
-/*         RCTL(KC_SPC), */
-/*         RGUI(KC_SPC), KC_BSPC, KC_RGUI */
-/*     ), */
 /* Keymap 1: Windows
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
