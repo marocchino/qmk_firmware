@@ -3,11 +3,11 @@
 #include "action_layer.h"
 #include "version.h"
 
-
-#define BASE 0 // default layer
-#define BASE_QUERY 1 // osx querty
-#define WINS 2 // wins
-#define WINQ 3 // wins
+// layers
+#define NORMAN 0 // norman osx
+#define QWERTY_OSX 1 // querty osx
+#define NORMAN_WIN 2 // wins
+#define QWERTY_WIN 3 // wins
 #define WCTL 4 // wins control
 #define MDIA 5 // media keys
 #define SYMB 6 // symbol keys
@@ -58,7 +58,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 |      |      |  En  |       | Spot |      |      |
  *                                 `--------------------'       `--------------------'
  */
-[BASE] = LAYOUT_ergodox(
+[NORMAN] = LAYOUT_ergodox(
         // left hand
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,
         KC_TAB,  KC_Q,    KC_W,    KC_D,    KC_F,    KC_K,   PRN,
@@ -74,11 +74,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_Y,    KC_N,    KC_I,    KC_O,    KC_H,    KC_ENT,
         KC_EQL,       KC_P,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                                KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPM,
-        DF(BASE_QUERY), DF(WINS),
+        DF(QWERTY_OSX),   DF(NORMAN_WIN),
         RCTL(KC_SPC),
-        RGUI(KC_SPC),   KC_BSPC, KC_RGUI
+        RGUI(KC_SPC), KC_BSPC, KC_RGUI
     ),
-/* Keymap 0: Basic layer
+/* Keymap 1: Qwerty layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   5  |   6  |   7  |   8  |   9  |   0  | BkSp   |
@@ -92,14 +92,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | ESC  |  Ja  |       | Qwer | Wins |
+ *                                        | ESC  |  Ja  |       | Base | Wins |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      |  Ko  |       | Dash |      |      |
  *                                 | LGui |Space |------|       |------| BkSp | RGui |
  *                                 |      |      |  En  |       | Spot |      |      |
  *                                 `--------------------'       `--------------------'
  */
-[BASE_QUERY] = LAYOUT_ergodox(
+[QWERTY_OSX] = LAYOUT_ergodox(
         // left hand
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,   KC_6,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,   PRN,
@@ -110,16 +110,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                                              HYPR(KC_9),
                                             KC_LGUI, KC_SPC, HYPR(KC_8),
         // right hand
-        KC_7,         KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,
+        KC_5,         KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_BSPC,
         BRC,          KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_BSLS,
                       KC_H,    KC_J,    KC_K,    KC_L,    MDIA_SC, KC_ENT,
         KC_EQL,       KC_N,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                                KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPM,
-        DF(BASE),     DF(WINQ),
+        DF(NORMAN),     DF(QWERTY_WIN),
         RCTL(KC_SPC),
         RGUI(KC_SPC), KC_BSPC, KC_RGUI
     ),
-/* Keymap 1: Windows
+/* Keymap 2: Windows Norman
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   5  |   6  |   7  |   8  |   9  |   0  | BkSp   |
@@ -140,7 +140,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *                                 |      |      | Lang |       | RAlt |      |      |
  *                                 `--------------------'       `--------------------'
  */
-[WINS] = LAYOUT_ergodox(
+[NORMAN_WIN] = LAYOUT_ergodox(
         // left hand
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,
         KC_TAB,  KC_Q,    KC_W,    KC_D,    KC_F,    KC_K,    PRN,
@@ -156,11 +156,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_Y,    KC_N,    KC_I,    KC_O,    KC_H,    KC_ENT,
         KC_EQL,  KC_P,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                           KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPW,
-        DF(WINQ), DF(BASE),
+        DF(QWERTY_WIN), DF(NORMAN),
         KC_RGUI,
-        KC_RALT,  KC_BSPC, MO(WCTL)
+        KC_RALT,        KC_BSPC, MO(WCTL)
     ),
-/* Keymap 2: Basic Qwerty layer
+/* Keymap 3: Windows Qwerty layer
  *
  * ,--------------------------------------------------.           ,--------------------------------------------------.
  * | `      |   1  |   2  |   3  |   4  |   5  |  6   |           |   5  |   6  |   7  |   8  |   9  |   0  | BkSp   |
@@ -174,14 +174,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  *   | Hyper| LAlt |SftGui|   [  |   ]  |                                       | Left | Down |  Up  | Right| C&P  |
  *   `----------------------------------'                                       `----------------------------------'
  *                                        ,-------------.       ,-------------.
- *                                        | ESC  | RAlt |       | '"   | Base |
+ *                                        | ESC  | RAlt |       | Win  | Base |
  *                                 ,------|------|------|       |------+------+------.
  *                                 |      |      | LGui |       | RGui |      |      |
  *                                 | LAlt |Space |------|       |------| BkSp | RGui |
  *                                 |      |      | Lang |       | RAlt |      |      |
  *                                 `--------------------'       `--------------------'
  */
-[WINQ] = LAYOUT_ergodox(
+[QWERTY_WIN] = LAYOUT_ergodox(
         // left hand
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    PRN,
@@ -197,9 +197,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_ENT,
         KC_EQL,  KC_N,    KC_M,    KC_COMM, KC_DOT,  MDIA_SL, KC_LSFT,
                           KC_LEFT, KC_DOWN, KC_UP,   KC_RGHT, CPW,
-        DF(WINS), DF(BASE),
+        DF(NORMAN_WIN), DF(QWERTY_OSX),
         KC_RGUI,
-        KC_RALT,  KC_BSPC, KC_RGUI
+        KC_RALT,        KC_BSPC, KC_RGUI
     ),
 
 /* Keymap 3: Windows Control
@@ -329,7 +329,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 const uint16_t PROGMEM fn_actions[] = {
     [1] = ACTION_LAYER_TAP_TOGGLE(MDIA),                // FN1 - Momentary Layer 1 (Media)
-    [2] = ACTION_LAYER_TAP_TOGGLE(WINS),                // FN2 - Momentary Layer 2 (Windows)
+    [2] = ACTION_LAYER_TAP_TOGGLE(NORMAN_WIN),          // FN2 - Momentary Layer 2 (Windows)
     [3] = ACTION_LAYER_TAP_TOGGLE(SYMB),                // FN3 - Momentary Layer 3 (Symbol)
 };
 
@@ -405,7 +405,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // Runs just one time when the keyboard initializes.
 void matrix_init_user(void) {
-
+    ergodox_board_led_off();
+    ergodox_right_led_1_on();
+    ergodox_right_led_2_on();
+    ergodox_right_led_3_on();
+    ergodox_right_led_1_off();
+    ergodox_right_led_2_off();
+    ergodox_right_led_3_off();
 };
 
 // Runs constantly in the background, in a loop.
@@ -419,7 +425,6 @@ void matrix_scan_user(void) {
     ergodox_right_led_2_off();
     ergodox_right_led_3_off();
     switch (layer) {
-      case WCTL:
       case SYMB:
         ergodox_right_led_2_on();
         break;
