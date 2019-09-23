@@ -14,8 +14,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "preonic.h"
-#include "action_layer.h"
+#include QMK_KEYBOARD_H
+#include "muse.h"
 
 enum preonic_layers {
   _NORMAN,
@@ -26,13 +26,15 @@ enum preonic_layers {
 
 enum preonic_keycodes {
   NORMAN = SAFE_RANGE,
+  QWERTY,
   SYMBOL,
-  LOWER
+  LOWER,
+  BACKLIT
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
-/* Qwerty
+/* Norman
  * ,-----------------------------------------------------------------------------------.
  * |   `  |   1  |   2  |   3  |   4  |   5  |   6  |   7  |   8  |   9  |   0  | Bksp |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -42,7 +44,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift| S Z  |   X  |   C  |   V  |   B  |   P  |   M  |   ,  |   .  | / L  |Shift |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Meh  |  Alt |   [  |   ]  |  Cmd |    Space    | Left | Down |  Up  |Right |      |
+ * | Meh  |  Alt |   [  |   ]  |  Cmd |    Space    | Left | Down |  Up  |Right | Alt  |
  * `-----------------------------------------------------------------------------------'
  */
 [_NORMAN] = {
@@ -62,7 +64,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * | Shift| S Z  |   X  |   C  |   V  |   B  |   N  |   M  |   ,  |   .  | / L  |Shift |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
- * | Meh  |  Alt |   [  |   ]  |  Cmd |    Space    | Left | Down |  Up  |Right |      |
+ * | Meh  |  Alt |   [  |   ]  |  Cmd |    Space    | Left | Down |  Up  |Right | Alt  |
  * `-----------------------------------------------------------------------------------'
  */
 [_QWERTY] = {
@@ -96,11 +98,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 /* Lower
  * ,-----------------------------------------------------------------------------------.
- * |      |      |      |      |      |      |      |      |      |      |      |      |
+ * | ESC  |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
  * |      |      |  up  |      |      |      |      |      | RESET|      |      |      |
  * |------+------+------+------+------+-------------+------+------+------+------+------|
- * |      | left | down | right|      |      |      |      |      |      |      |      |
+ * |      | left | down | right|      |      |Qwerty|Norman|      |      |      |      |
  * |------+------+------+------+------+------|------+------+------+------+------+------|
  * |      |      |      |      |      |      |      |      |      |      |      |      |
  * |------+------+------+------+------+------+------+------+------+------+------+------|
@@ -108,10 +110,33 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
  * `-----------------------------------------------------------------------------------'
  */
 [_LOWER] = {
-  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
-  {_______, _______, KC_MS_U, _______, _______, _______, _______, _______, RESET,   _______, _______, _______},
-  {_______, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, _______, _______, _______, _______, _______, _______},
-  {_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______},
-  {_______, _______, KC_BTN1, KC_BTN2, _______, _______, _______, KC_WBAK, KC_VOLD, KC_VOLU, KC_MPLY, _______}
+  {KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,       KC_F7,       KC_F8,   KC_F9,   KC_F10,  _______},
+  {_______, _______, KC_MS_U, _______, _______, _______, _______,     _______,     RESET,   KC_F11,  KC_F12,  _______},
+  {_______, KC_MS_L, KC_MS_D, KC_MS_R, _______, _______, DF(_QWERTY), DF(_NORMAN), _______, _______, _______, _______},
+  {_______, _______, _______, _______, _______, _______, _______,     _______,     _______, _______, _______, _______},
+  {_______, _______, KC_BTN1, KC_BTN2, _______, _______, _______,     KC_WBAK,     KC_VOLD, KC_VOLU, KC_MPLY, _______}
 }
 };
+
+bool muse_mode = false;
+uint8_t last_muse_note = 0;
+uint16_t muse_counter = 0;
+uint8_t muse_offset = 70;
+uint16_t muse_tempo = 50;
+
+void matrix_scan_user(void) {
+  #ifdef AUDIO_ENABLE
+    if (muse_mode) {
+      if (muse_counter == 0) {
+        uint8_t muse_note = muse_offset + SCALE[muse_clock_pulse()];
+        if (muse_note != last_muse_note) {
+          stop_note(compute_freq_for_midi_note(last_muse_note));
+          play_note(compute_freq_for_midi_note(muse_note), 0xF);
+          last_muse_note = muse_note;
+        }
+      }
+      muse_counter = (muse_counter + 1) % muse_tempo;
+    }
+  #endif
+}
+

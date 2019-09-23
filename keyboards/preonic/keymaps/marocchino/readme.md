@@ -3,5 +3,5 @@
 ## Build
 
 ```
-docker run -e keymap=marocchino -e keyboard=preonic --rm -v $('pwd'):/qmk:rw edasque/qmk_firmware
+make preonic/rev2:marocchino
 ```
